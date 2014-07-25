@@ -157,7 +157,11 @@ L<http://search.cpan.org/dist/Net-Amazon-Cognito/>
 
 Copyright 2014 Gonzalo Barco.
 
-This program is released under the following license: gpl, artistic
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
+
+See http://dev.perl.org/licenses/ for more information.
 
 =cut
 
