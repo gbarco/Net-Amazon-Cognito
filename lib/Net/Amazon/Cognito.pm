@@ -8,7 +8,7 @@ use Net::Amazon::Signature::V4;
 
 =head1 NAME
 
-Net::Amazon::Cognito - The great new Net::Amazon::Cognito!
+Net::Amazon::Cognito - Perl implementation of Amazon Cognito API 2014-06-30.
 
 =head1 VERSION
 
