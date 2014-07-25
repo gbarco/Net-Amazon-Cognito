@@ -3,6 +3,8 @@ package Net::Amazon::Cognito;
 use v5.10.0;
 use strict;
 use warnings FATAL => 'all';
+use Carp;
+use Net::Amazon::Signature::V4;
 
 =head1 NAME
 
@@ -38,14 +40,77 @@ if you don't export anything, such as for a purely object-oriented module.
 
 =cut
 
-sub function1 {
-}
+=head1 CONSTRUCTOR
 
-=head2 function2
+=head2 new( $region, $access_key_id, $secret )
 
 =cut
 
-sub function2 {
+sub new {
+	my ( $class, $region, $access_key_id, $secret ) = @_;
+
+	croak "no region specified" unless $region;
+	croak "no access key specified" unless $access_key_id;
+	croak "no secret specified" unless $secret;
+
+	my $self = {
+		region => $region,
+		# be well behaved and tell who we are
+		ua     => LWP::UserAgent->new( agent=> __PACKAGE__ . '/' . $VERSION ),
+		sig    => Net::Amazon::Signature::V4->new( $access_key_id, $secret, $region, 'cognito-identity' ),
+	};
+	return bless $self, $class;
+}
+
+=head2 Internal Functions
+
+=head3 _send_receive
+Simplify notation, crafts a request, sends requests and carp on errors.
+
+=head3 _craft_request
+Simplify header definition completing provided headers with required headers.
+
+=head3 _send_request
+Send requests, decodes and carps on errors.
+
+=cut
+
+sub _send_receive {
+	my $self = shift;
+	my $req = $self->_craft_request( @_ );
+	return $self->_send_request( $req );
+}
+
+sub _craft_request {
+	my ( $self, $method, $url, $header, $content ) = @_;
+	my $host = 'cognito-identity.'.$self->{region}.'.amazonaws.com';
+	my $total_header = [
+		'Version' => '2014-06-30',
+		'Host' => $host,
+		'X-Amz-Date' => POSIX::strftime( '%Y%m%dT%H%M%SZ', gmtime ),
+		$header ? @$header : ()
+	];
+	my $req = HTTP::Request->new( $method => "https://$host$url", $total_header, $content);
+	my $signed_req = $self->{sig}->sign( $req );
+	return $signed_req;
+}
+
+sub _send_request {
+	my ( $self, $req ) = @_;
+	my $res = $self->{ua}->request( $req );
+	if ( $res->is_error ) {
+		# try to decode Glacier error
+		eval {
+			my $error = decode_json( $res->decoded_content );
+			carp sprintf 'Non-successful response: %s (%s)', $res->status_line, $error->{code};
+			carp decode_json( $res->decoded_content )->{message};
+		};
+		if ( $@ ) {
+			# fall back to reporting ua errors
+			carp sprintf "[%d] %s %s\n", $res->code, $res->message, $res->decoded_content;
+		}
+	}
+	return $res;
 }
 
 =head1 AUTHOR
