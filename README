@@ -1,0 +1,53 @@
+Net-Amazon-Cognito
+
+This module is in the way of implementing the Amazon Cognito API 2014-06-30,
+current as of 2014. It will be able to manage Cognito identity pools and
+identities. Amazon states "Amazon Cognito is a simple user identity and data
+synchronization service that helps you securely manage and synchronize app data
+for your users across their mobile devices. You can create unique identities for
+your users through a number of public login providers (Amazon, Facebook, and
+Google) and also support unauthenticated guests. You can save app data locally
+on users’ devices allowing your applications to work even when the devices are
+offline. With Amazon Cognito, you can save any kind of data in the AWS Cloud,
+such as app preferences or game state, without writing any backend code or
+managing any infrastructure."
+
+Module maintained and originally written by Gonzalo Barco C<< <gbarco uy at gmail dot com, no spaces> >>.
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+	perl Makefile.PL
+	make
+	make test
+	make install
+
+SUPPORT AND DOCUMENTATION
+
+After installing, you can find documentation for this module with the
+perldoc command.
+
+    perldoc Net::Amazon::Cognito
+
+You can also look for information at:
+
+    RT, CPAN's request tracker (report bugs here)
+        http://rt.cpan.org/NoAuth/Bugs.html?Dist=Net-Amazon-Cognito
+
+    AnnoCPAN, Annotated CPAN documentation
+        http://annocpan.org/dist/Net-Amazon-Cognito
+
+    CPAN Ratings
+        http://cpanratings.perl.org/d/Net-Amazon-Cognito
+
+    Search CPAN
+        http://search.cpan.org/dist/Net-Amazon-Cognito/
+
+
+LICENSE AND COPYRIGHT
+
+Copyright (C) 2014 Gonzalo Barco
+
+This program is released under the following license: gpl, artistic
+
